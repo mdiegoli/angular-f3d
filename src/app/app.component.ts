@@ -36,23 +36,18 @@ export class AppComponent implements OnInit {
     line.material.transparent = true;
 
     scene.add(line);
-    /*
-    const animate = function () {
-      requestAnimationFrame(animate);
-
-      cube.rotation.x += 0.01;
-      cube.rotation.y += 0.01;
-
-      renderer.render(scene, camera);
-    };
-    camera.position.z = 5;
-    renderer.render(scene, camera);
-    animate();
-    */
+    var draw = false;
 
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
 
+    function createCube(position: object) {
+      const geometry = new THREE.BoxGeometry(1, 1, 1);
+      const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+      const cube = new THREE.Mesh(geometry, material);
+      cube.position.copy(position);
+      scene.add(cube);
+    }
     function onMouseMove(event) {
       // calculate mouse position in normalized device coordinates
       // (-1 to +1) for both components
@@ -70,6 +65,12 @@ export class AppComponent implements OnInit {
         1;
     }
 
+    function onMouseDown(event) {
+      draw = true;
+    }
+    function onMouseUp(event) {
+      draw = false;
+    }
     function render() {
       window.requestAnimationFrame(render);
       // update the picking ray with the camera and mouse position
@@ -81,12 +82,18 @@ export class AppComponent implements OnInit {
       for (let i = 0; i < intersects.length; i++) {
         //intersects[ i ].object.material.color.set( 0xff0000 );
         cube.position.copy(intersects[i].point);
+        if (draw) {
+          createCube(intersects[i].point);
+        }
       }
 
       renderer.render(scene, camera);
     }
 
     window.addEventListener('mousemove', onMouseMove, false);
+    window.addEventListener('mousedown', onMouseDown, false);
+    window.addEventListener('mouseup', onMouseUp, false);
+
     render();
   }
 }
