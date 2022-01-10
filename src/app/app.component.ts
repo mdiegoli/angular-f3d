@@ -37,6 +37,10 @@ export class AppComponent implements OnInit {
 
     scene.add(line);
     var draw = false;
+    const oldCoord = new THREE.Vector2();
+    var oldAngle,
+      CANADD = false,
+      TOLERANCE = 5;
 
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
@@ -51,6 +55,9 @@ export class AppComponent implements OnInit {
     function onMouseMove(event) {
       // calculate mouse position in normalized device coordinates
       // (-1 to +1) for both components
+      oldCoord.x = mouse.x;
+      oldCoord.y = mouse.y;
+
       mouse.x =
         ((event.clientX - renderer_domElement.offsetLeft) /
           renderer_domElement.clientWidth) *
@@ -63,6 +70,20 @@ export class AppComponent implements OnInit {
         ) *
           2 +
         1;
+      if (!oldCoord.x && !oldCoord.y) {
+        oldCoord.x = mouse.x;
+        oldCoord.y = mouse.y;
+      } else {
+        var angleDeg =
+          (Math.atan2(mouse.y - oldCoord.y, mouse.x - oldCoord.x) * 180) /
+          Math.PI;
+        if (oldAngle) {
+          let diffAngle = oldAngle - angleDeg;
+          if (diffAngle < 0) diffAngle *= -1;
+          if (diffAngle > TOLERANCE) CANADD = true;
+        }
+        oldAngle = angleDeg;
+      }
     }
 
     function onMouseDown(event) {
@@ -82,8 +103,9 @@ export class AppComponent implements OnInit {
       for (let i = 0; i < intersects.length; i++) {
         //intersects[ i ].object.material.color.set( 0xff0000 );
         cube.position.copy(intersects[i].point);
-        if (draw) {
+        if (draw && CANADD) {
           createCube(intersects[i].point);
+          CANADD = false;
         }
       }
 
