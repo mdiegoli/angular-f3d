@@ -4,4 +4,4 @@
 
 A sphere is positioned in the same place of the camera and raycast is done into its surface to draw into space.
 
-[Angular doc] (https://angular.io/docs)
+[Angular doc](https://angular.io/docs)
