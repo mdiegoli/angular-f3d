@@ -41,7 +41,7 @@ export class AppComponent implements OnInit {
     const oldCoord = new THREE.Vector2();
     var oldAngle,
       CANADD = false,
-      TOLERANCE = 5;
+      me = this;
 
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
@@ -81,7 +81,15 @@ export class AppComponent implements OnInit {
         if (oldAngle) {
           let diffAngle = oldAngle - angleDeg;
           if (diffAngle < 0) diffAngle *= -1;
-          if (diffAngle > TOLERANCE) CANADD = true;
+          if (diffAngle > me.tolerance) CANADD = true;
+          console.log(
+            'CANADD ' +
+              CANADD +
+              ' diffAngle ' +
+              diffAngle +
+              ' tolerance ' +
+              me.tolerance
+          );
         }
         oldAngle = angleDeg;
       }
