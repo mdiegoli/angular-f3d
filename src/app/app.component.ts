@@ -8,6 +8,7 @@ import * as THREE from 'three';
 })
 export class AppComponent implements OnInit {
   name = 'Angular';
+  tolerance = 5;
 
   ngOnInit() {
     const scene = new THREE.Scene();
